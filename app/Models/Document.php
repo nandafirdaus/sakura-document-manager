@@ -23,5 +23,11 @@ class Document extends \Eloquent {
 	{
 		return $this->belongsTo('App\Models\Employee');
 	} 
+
+	public function documentType()
+	{
+		return $this->hasOne('App\Models\DocumentType');
+	} 
+
 }
 ?>

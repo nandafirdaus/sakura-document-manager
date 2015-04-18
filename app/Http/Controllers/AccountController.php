@@ -4,6 +4,7 @@ use Input;
 use Validator;
 use Redirect;
 use Auth;
+use Session;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Contracts\Auth\Guard;

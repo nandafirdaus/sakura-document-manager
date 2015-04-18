@@ -5,7 +5,7 @@
 	<div class="row">
 		<div class="col-md-10 col-md-offset-1">
 			<div class="panel panel-default">
-				<div class="panel-heading">Daftar Karyawan</div>
+				<div class="panel-heading">Daftar Dokumen</div>
 				<div class="panel-body">
 					@if (count($errors) > 0)
 						<div class="alert alert-danger">
@@ -19,25 +19,29 @@
 					@endif
 
 					<div class="form-group">
-						<a class="btn btn-primary btn-sm" href="{{ url('/employee/create') }}" role="button">Tambah Karyawan</a>
+						<a class="btn btn-primary btn-sm" href="{{ url('/document/create') }}" role="button">Tambah Dokumen</a>
 					</div>
 
 					<div class="table-responsive">
 						<table class="table table-hover">
 							<thead>
 								<tr>
-									<th>Nama</th>
-									<th>Posisi</th>
+									<th>Nama Karyawan</th>
+									<th>Tipe Dokumen</th>
 									<th>Perusahaan</th>
+									<th>Issued</th>
+									<th>Expired</th>
 									<th>Perintah</th>
 								</tr>
 							</thead>
 							<tbody>
-								@foreach ($employees->all() as $employee)
+								@foreach ($documents->all() as $document)
 									<tr>
-										<td>{{$employee->name}}</td>
-										<td>{{$employee->position}}</td>
-										<td>{{$employee->company->name}}</td>
+										<td>{{$document->employee->name}}</td>
+										<td>{{$document->documentType->name}}</td>
+										<td>{{$document->employee->company->name}}</td>
+										<td>{{$document->issued}}</td>
+										<td>{{$document->expired}}</td>
 										<td>
 											<a class="btn btn-success" href="{{ url('/employee/' . $employee->id . '/view') }}" role="button">Lihat</a>
 											<a class="btn btn-primary" href="{{ url('/employee/' . $employee->id . '/edit') }}" role="button">Edit</a>

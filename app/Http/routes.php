@@ -75,6 +75,24 @@ Route::get('document', 'DocumentController@getList');
 
 Route::get('document/{id}/delete', 'DocumentController@delete');
 
+/**
+	Document Type Routes
+*/
+
+Route::get('document-type/create', 'DocumentController@getCreateType');
+
+Route::post('document-type/create', 'DocumentController@postCreateType');
+
+Route::get('document-type/{id}/edit', 'DocumentController@getEditType');
+
+Route::post('document-type/{id}/edit/', 'DocumentController@postEditType');
+
+Route::get('document-type/{id}/view', 'DocumentController@getViewType');
+
+Route::get('document-type', 'DocumentController@getListType');
+
+Route::get('document-type/{id}/delete', 'DocumentController@deleteType');
+
 Route::controllers([
 	'auth' => 'AccountController',
 	'password' => 'Auth\PasswordController',

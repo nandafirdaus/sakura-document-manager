@@ -53,6 +53,7 @@
 						<ul class="dropdown-menu" role="menu">
 							<li><a href="{{ url('/company') }}">Perusahaan</a></li>
 							<li><a href="{{ url('/employee') }}">Karyawan</a></li>
+							<li><a href="{{ url('/document-type') }}">Tipe Dokumen</a></li>
 							<li><a href="{{ url('/document') }}">Dokumen</a></li>
 						</ul>
 					</li>
