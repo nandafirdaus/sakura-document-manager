@@ -18,5 +18,10 @@ class Company extends \Eloquent {
 	{
 		return $this->hasMany('App\Models\Employee');
 	} 
+
+	public function rptka()
+	{
+		return $this->hasMany('App\Models\Rptka');
+	}
 }
 ?>

@@ -5,7 +5,7 @@
 	<div class="row">
 		<div class="col-md-10 col-md-offset-1">
 			<div class="panel panel-default">
-				<div class="panel-heading">Daftar Karyawan</div>
+				<div class="panel-heading">Daftar RPTKA Expired</div>
 				<div class="panel-body">
 					@if (count($errors) > 0)
 						<div class="alert alert-danger">
@@ -18,37 +18,39 @@
 						</div>
 					@endif
 
-					<div class="form-group">
-						<a class="btn btn-primary btn-sm" href="{{ url('/employee/create') }}" role="button">Tambah Karyawan</a>
-					</div>
+<!--					<div class="form-group">
+						<a class="btn btn-primary btn-sm" href="{{ url('/report/rptka') }}" role="button">Download Laporan</a>
+					</div>-->
 
 					<div class="table-responsive">
 						<table class="table table-hover">
 							<thead>
 								<tr>
-									<th>Nama</th>
-									<th>Jabatan</th>
 									<th>Perusahaan</th>
+									<th>No. Dokumen</th>
+									<th>Issued</th>
+									<th>Expired</th>
 									<th>Perintah</th>
 								</tr>
 							</thead>
 							<tbody>
-								@foreach ($employees->all() as $employee)
+								@foreach ($rptkas->all() as $rptka)
 									<tr>
-										<td>{{$employee->name}}</td>
-										<td>{{$employee->position}}</td>
-										<td>{{$employee->company->name}}</td>
+										<td>{{$rptka->company->name}}</td>
+										<td>{{$rptka->doc_number}}</td>
+										<td>{{date('d-m-Y', strtotime($rptka->issued))}}</td>
+										<td>{{date('d-m-Y', strtotime($rptka->expired))}}</td>
 										<td>
-											<a class="btn btn-success" href="{{ url('/employee/' . $employee->id . '/view') }}" role="button">Lihat</a>
-											<a class="btn btn-primary" href="{{ url('/employee/' . $employee->id . '/edit') }}" role="button">Edit</a>
-											<a class="btn btn-warning" href="{{ url('/employee/' . $employee->id . '/delete') }}" role="button" Onclick="javascript:return confirm('Yakin ingin menghapus data ini?');">Hapus</a>
+											<a class="btn btn-success" href="{{ url('/rptka/' . $rptka->id . '/view?prev=expired') }}" role="button">Lihat</a>
+											<a class="btn btn-primary" href="{{ url('/rptka/' . $rptka->id . '/edit?prev=expired') }}" role="button">Edit</a>
+											<a class="btn btn-warning" href="{{ url('/rptka/' . $rptka->id . '/delete?prev=expired') }}" role="button" Onclick="javascript:return confirm('Yakin ingin menghapus data ini?');">Hapus</a>
 										</td>
 									</td>
 								@endforeach
 							</tbody>
 							<tfoot>
 							    <tr role="row">
-							        <th data-column="0" colspan="4" class="ts-pager form-horizontal tablesorter-pager tablesorter-headerAsc">
+							        <th data-column="0" colspan="5" class="ts-pager form-horizontal tablesorter-pager tablesorter-headerAsc">
 										<button aria-disabled="false" tabindex="0" type="button" class="btn first"><i class="icon-step-backward glyphicon glyphicon-step-backward"></i></button>
 										<button aria-disabled="false" tabindex="0" type="button" class="btn prev"><i class="icon-arrow-left glyphicon glyphicon-backward"></i></button>
 										<span class="pagedisplay">41 - 50 / 50 (50)</span> <!-- this can be any element, including an input -->

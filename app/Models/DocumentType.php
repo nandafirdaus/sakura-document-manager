@@ -16,7 +16,7 @@ class DocumentType extends \Eloquent {
 
 	public function document()
 	{
-		return $this->belongsTo('App\Models\Document');
-	} 
+		return $this->hasMany('App\Models\Document');
+	}
 }
 ?>

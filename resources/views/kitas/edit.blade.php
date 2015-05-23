@@ -5,7 +5,7 @@
 	<div class="row">
 		<div class="col-md-8 col-md-offset-2">
 			<div class="panel panel-default">
-				<div class="panel-heading">Tambah Dokumen</div>
+				<div class="panel-heading">Edit KITAS</div>
 				<div class="panel-body">
 					@if (count($errors) > 0)
 						<div class="alert alert-danger">
@@ -18,40 +18,46 @@
 						</div>
 					@endif
 
-					<form class="form-horizontal" role="form" method="POST" action="{{ url('/document/create/' . $kitasId) }}" enctype="multipart/form-data">
+					<form class="form-horizontal" role="form" method="POST" action="{{ url('/kitas/' . $kitas->id .  '/edit') . $prev }}" enctype="multipart/form-data">
 						<input type="hidden" name="_token" value="{{ csrf_token() }}">
-						<input type="hidden" name="kitas_id" value="{{ $kitasId }}">
-
-						<div class="form-group">
-							<label class="col-md-4 control-label">Tipe Dokumen</label>
-							<div class="col-md-6">
-								<select name="type_id" class="js-dropdown-document-type form-control" placeholder='Pilih tipe dokumen'>
-									<option value="" selected disabled>Pilih tipe dokumen</option>
-									@foreach ($documentTypes->all() as $documentType)
-										<option value="{{$documentType->id}}">{{$documentType->name}}</option>
-									@endforeach
-								</select>
-							</div>
-						</div>
 
 						<div class="form-group">
 							<label class="col-md-4 control-label">Issued</label>
 							<div class="col-md-6">
-								<input type="text" id="issued" class="form-control" name="issued" value="{{ old('issued') }}">
+								<input type="text" id="issued" class="form-control" name="issued" value="{{ date('d-m-Y', strtotime($kitas->issued)) }}">
 							</div>
 						</div>
 
 						<div class="form-group">
 							<label class="col-md-4 control-label">Expired</label>
 							<div class="col-md-6">
-								<input type="text" id="expired" class="form-control" name="expired" value="{{ old('expired') }}">
+								<input type="text" id="expired" class="form-control" name="expired" value="{{ date('d-m-Y', strtotime($kitas->expired)) }}">
 							</div>
 						</div>
 
 						<div class="form-group">
 							<label class="col-md-4 control-label">Nomor Dokumen</label>
 							<div class="col-md-6">
-								<input type="text" class="form-control" name="doc_number" value="{{ old('doc_number') }}">
+								<input type="text" class="form-control" name="doc_number" value="{{ $kitas->doc_number }}">
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-md-4 control-label">Ke</label>
+							<div class="col-md-6">
+								<input type="text" class="form-control" name="sequence" value="{{ $kitas->sequence }}">
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-md-4 control-label">Pilih Karyawan</label>
+							<div class="col-md-6">
+								<select name="employee_id" class="js-dropdown-employee form-control" placeholder='Pilih karyawan'>
+									<option value="" selected disabled>Pilih karyawan</option>
+									@foreach ($employees->all() as $employee)
+										<option value="{{$employee->id}}">{{$employee->name}} ({{$employee->company->name}})</option>
+									@endforeach
+								</select>
 							</div>
 						</div>
 
@@ -68,23 +74,22 @@
 								<button type="submit" class="btn btn-primary">
 									Simpan
 								</button>
-								<a class="btn btn-primary" href="{{ url('kitas/' . $kitasId . '/view') }}" role="button">Kembali</a>
+								@if($prev == '')
+									<a class="btn btn-primary" href="{{ url('/kitas') }}" role="button">Kembali</a>
+								@else
+									<a class="btn btn-primary" href="{{ url('expired/kitas') }}" role="button">Kembali</a>
+								@endif
 							</div>
 						</div>
 					</form>
 
 					<script type="text/javascript">
-						$(".js-dropdown-document-type").select2({
-							placeholder: "Pilih tipe dokumen"
-						});
-
-						$('.js-dropdown-document-type').val("{{ old('type_id') }}").trigger("change");
 
 						$(".js-dropdown-employee").select2({
 							placeholder: "Pilih karyawan"
 						});
 
-						$('.js-dropdown-employee').val("{{ old('employee_id') }}").trigger("change");
+						$('.js-dropdown-employee').val("{{ $kitas->employee_id }}").trigger("change");
 
 						$( "#issued" ).datepicker({
 							changeMonth: true,
@@ -98,6 +103,7 @@
 						});
 
 					</script>
+
 				</div>
 			</div>
 		</div>

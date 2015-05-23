@@ -30,7 +30,7 @@
 						</div>
 
 						<div class="form-group">
-							<label class="col-md-4 control-label">Posisi:</label>
+							<label class="col-md-4 control-label">Jabatan:</label>
 							<div class="col-md-6">
 								<p class="form-control-static">{{ $employee->position }}</p>
 							</div>
@@ -44,8 +44,85 @@
 						</div>
 
 						<div class="form-group">
+							<label class="col-md-4 control-label">RPTKA:</label>
+							<div class="col-md-6">
+								@if($employee->rptka != null)
+									<p class="form-control-static">{{ $employee->rptka->doc_number }}</p>
+								@else
+									<p class="form-control-static">-</p>
+								@endif
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-md-4 control-label">RPTKA Issued:</label>
+							<div class="col-md-6">
+								@if($employee->rptka != null)
+									<p class="form-control-static">{{ date('d-m-Y', strtotime($employee->rptka->issued)) }}</p>
+								@else
+									<p class="form-control-static">-</p>
+								@endif
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-md-4 control-label">RPTKA Expired:</label>
+							<div class="col-md-6">
+								@if($employee->rptka != null)
+									<p class="form-control-static">{{ date('d-m-Y', strtotime($employee->rptka->expired)) }}</p>
+								@else
+									<p class="form-control-static">-</p>
+								@endif
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-md-4 control-label">Passport Number:</label>
+							<div class="col-md-6">
+								<p class="form-control-static">{{ $employee->passport_number }}</p>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-md-4 control-label">Passport Issued:</label>
+							<div class="col-md-6">
+								@if($employee->passport_issued != null)
+									<p class="form-control-static">{{ date('d-m-Y', strtotime($employee->passport_issued)) }}</p>
+								@else
+									<p class="form-control-static">-</p>
+								@endif
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-md-4 control-label">Passport Expired:</label>
+							<div class="col-md-6">
+								@if($employee->passport_expired != null)
+									<p class="form-control-static">{{ date('d-m-Y', strtotime($employee->passport_expired)) }}</p>
+								@else
+									<p class="form-control-static">-</p>
+								@endif
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label class="col-md-4 control-label">Scan Passport:</label>
+							<div class="col-md-6">
+								@if($employee->passport_file_url != '')
+								<a class="btn btn-default btn-sm" href="{{ url($employee->passport_file_url) }}" target="_blank" role="button">Download</a>
+								@else
+									<a class="btn btn-default btn-sm" disabled="disabled" target="_blank" role="button">Download</a>
+								@endif
+							</div>
+						</div>
+
+						<div class="form-group">
 							<div class="col-md-6 col-md-offset-4">
-								<a class="btn btn-primary" href="{{ url('/employee') }}" role="button">Kembali</a>
+								@if($prev == '')
+									<a class="btn btn-primary" href="{{ url('/employee') }}" role="button">Kembali</a>
+								@else
+									<a class="btn btn-primary" href="{{ url('expired/passport') }}" role="button">Kembali</a>
+								@endif
 							</div>
 						</div>
 					</form>

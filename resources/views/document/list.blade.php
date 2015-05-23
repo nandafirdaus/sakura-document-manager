@@ -28,6 +28,7 @@
 								<tr>
 									<th>Nama Karyawan</th>
 									<th>Tipe Dokumen</th>
+									<th>Ke</th>
 									<th>Perusahaan</th>
 									<th>Issued</th>
 									<th>Expired</th>
@@ -39,13 +40,14 @@
 									<tr>
 										<td>{{$document->employee->name}}</td>
 										<td>{{$document->documentType->name}}</td>
+										<td>{{$document->sequence}}</td>
 										<td>{{$document->employee->company->name}}</td>
-										<td>{{$document->issued}}</td>
-										<td>{{$document->expired}}</td>
+										<td>{{date('d-m-Y', strtotime($document->issued))}}</td>
+										<td>{{date('d-m-Y', strtotime($document->expired))}}</td>
 										<td>
-											<a class="btn btn-success" href="{{ url('/employee/' . $employee->id . '/view') }}" role="button">Lihat</a>
-											<a class="btn btn-primary" href="{{ url('/employee/' . $employee->id . '/edit') }}" role="button">Edit</a>
-											<a class="btn btn-warning" href="{{ url('/employee/' . $employee->id . '/delete') }}" role="button" Onclick="javascript:return confirm('Yakin ingin menghapus data ini?');">Hapus</a>
+											<a class="btn btn-success" href="{{ url('/document/' . $document->id . '/view') }}" role="button">Lihat</a>
+											<a class="btn btn-primary" href="{{ url('/document/' . $document->id . '/edit') }}" role="button">Edit</a>
+											<a class="btn btn-warning" href="{{ url('/document/' . $document->id . '/delete') }}" role="button" Onclick="javascript:return confirm('Yakin ingin menghapus data ini?');">Hapus</a>
 										</td>
 									</td>
 								@endforeach

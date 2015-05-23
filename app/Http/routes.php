@@ -21,6 +21,8 @@ Route::post('login', 'AccountController@doLogin');
 
 Route::get('logout', array('uses' => 'AccountController@logout'));
 
+Route::get('company/rptka', 'CompanyController@getRptka');
+
 /**
 	Company Routes
 */
@@ -61,9 +63,9 @@ Route::get('employee/{id}/delete', 'EmployeeController@delete');
 	Document Routes
 */
 
-Route::get('document/create', 'DocumentController@getCreate');
+Route::get('document/create/{kitasId}', 'DocumentController@getCreate');
 
-Route::post('document/create', 'DocumentController@postCreate');
+Route::post('document/create/{kitasId}', 'DocumentController@postCreate');
 
 Route::get('document/{id}/edit', 'DocumentController@getEdit');
 
@@ -92,6 +94,64 @@ Route::get('document-type/{id}/view', 'DocumentController@getViewType');
 Route::get('document-type', 'DocumentController@getListType');
 
 Route::get('document-type/{id}/delete', 'DocumentController@deleteType');
+
+/**
+	KITAS Routes
+*/
+
+Route::get('kitas/create', 'KitasController@getCreate');
+
+Route::post('kitas/create', 'KitasController@postCreate');
+
+Route::get('kitas/{id}/edit', 'KitasController@getEdit');
+
+Route::post('kitas/{id}/edit/', 'KitasController@postEdit');
+
+Route::get('kitas/{id}/view', 'KitasController@getView');
+
+Route::get('kitas', 'KitasController@getList');
+
+Route::get('kitas/{id}/delete', 'KitasController@delete');
+
+/**
+	RPTKA Routes
+*/
+
+Route::get('rptka/create', 'RptkaController@getCreate');
+
+Route::post('rptka/create', 'RptkaController@postCreate');
+
+Route::get('rptka/{id}/edit', 'RptkaController@getEdit');
+
+Route::post('rptka/{id}/edit/', 'RptkaController@postEdit');
+
+Route::get('rptka/{id}/view', 'RptkaController@getView');
+
+Route::get('rptka', 'RptkaController@getList');
+
+Route::get('rptka/{id}/delete', 'RptkaController@delete');
+
+/**
+	Report Routes
+*/
+
+Route::get('report/document', 'ReportController@getDocumentReport');
+
+Route::get('report/generate-document/{id}', 'ReportController@getGenerateDocument');
+
+Route::get('report/employee-document', 'ReportController@getEmployeeDocument');
+
+Route::get('report/download-document/{id}', 'ReportController@getDownloadEmployeeDocument');
+
+/**
+	Expired Routes
+*/
+
+Route::get('expired/kitas', 'ExpiredController@getKitas');
+
+Route::get('expired/passport', 'ExpiredController@getPassport');
+
+Route::get('expired/rptka', 'ExpiredController@getRptka');
 
 Route::controllers([
 	'auth' => 'AccountController',

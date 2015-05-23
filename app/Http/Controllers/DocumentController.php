@@ -4,11 +4,13 @@ use App\Models\Document;
 use App\Models\DocumentType;
 use App\Models\Company;
 use App\Models\Employee;
+use App\Models\Kitas;
 
 use Validator;
 use Input;
 use Session;
 use Redirect;
+use File;
 
 class DocumentController extends Controller {
 	/**
@@ -21,14 +23,15 @@ class DocumentController extends Controller {
 		$this->middleware('auth');
 	}
 
-	public function getCreate() 
+	public function getCreate($kitasId) 
 	{
 		$employees = Employee::all();
 		$documentTypes = DocumentType::all();
 
 		return view('document/create')
 			->with('employees', $employees)
-			->with('documentTypes', $documentTypes);
+			->with('documentTypes', $documentTypes)
+			->with('kitasId', $kitasId);
 	}
 
 	public function postCreate()
@@ -36,22 +39,41 @@ class DocumentController extends Controller {
 		$validator = Validator::make(Input::all(), Document::$rules);
 
 		if ($validator->fails()) {
-			return Redirect::to('document/create')
+			return Redirect::to('document/create/' . Input::get('kitas_id'))
 				->withErrors($validator)
 				->withInput(Input::all());
 		} else {
+
+			$kitas = Kitas::find(Input::get('kitas_id'));
+			$doc = $kitas->documents()->where('document_type_id', '=', Input::get('type_id'))->first();
+			if ($doc != null) {
+				return Redirect::to('document/create/' . Input::get('kitas_id'))
+				->withErrors("Dokumen " . $doc->documentType->name . " sudah ada! Edit atau hapus dokumen lama.")
+				->withInput(Input::all());
+			}
+
+			$destinationPath = '';
+			$fileName = '';
+
+			if (Input::hasFile('document_file')) {
+				$file = Input::file('document_file');
+				$destinationPath = 'uploads/documents/';
+				$extension = $file->getClientOriginalExtension();
+				$fileName = Input::get('kitas_id') . '-' . str_replace(' ', '-',DocumentType::find(Input::get('type_id'))->name) . '-' . rand(1111,9999) . '.' . $extension;
+				$file->move($destinationPath, $fileName);
+			}
+
 			$document = new Document;
-			$document->issued = Input::get('issued');
-			$document->expired = Input::get('expired');
+			$document->issued = date('Y-m-d', strtotime(Input::get('issued')));
+			$document->expired = date('Y-m-d', strtotime(Input::get('expired')));
 			$document->doc_number = Input::get('doc_number');
-			$document->sequence = Input::get('sequence');
-			$document->type_id = Input::get('type_id');
-			$document->employee_id = Input::get('employee_id');
-			$document->file_url = Input::get('file_url');
+			$document->document_type_id = Input::get('type_id');
+			$document->file_url = $destinationPath . $fileName;
+			$document->kitas_id = Input::get('kitas_id');
 			$document->save();
 
 			Session::flash('message', 'Berhasil menambahkan dokumen!');
-			return Redirect::to('document');
+			return Redirect::to('kitas/' . Input::get('kitas_id') . '/view');
 		}
 	}
 
@@ -76,18 +98,40 @@ class DocumentController extends Controller {
 				->withErrors($validator)
 				->withInput(Input::all());
 		} else {
+			$destinationPath = '';
+			$fileName = '';
+
+			if (Input::hasFile('document_file')) {
+				$file = Input::file('document_file');
+				$destinationPath = 'uploads/documents/';
+				$extension = $file->getClientOriginalExtension();
+				$fileName = Input::get('kitas_id') . '-' . str_replace(' ', '-',DocumentType::find(Input::get('type_id'))->name) . '-' .  rand(1111,9999) . '.' . $extension;
+				$file->move($destinationPath, $fileName);
+			}
+
 			$document = Document::find($id);
-			$document->issued = Input::get('issued');
-			$document->expired = Input::get('expired');
+
+			$kitas = Kitas::find(Input::get('kitas_id'));
+			$doc = $kitas->documents()->where('document_type_id', '=', Input::get('type_id'))->first();
+			
+			if ($doc != null && $document->document_type_id != Input::get('type_id')) {
+				return Redirect::to('document/' . $id .'/edit')
+				->withErrors("Dokumen " . $doc->documentType->name . " sudah ada! Edit atau hapus dokumen lama.")
+				->withInput(Input::all());
+			}
+
+			$document->issued = date('Y-m-d', strtotime(Input::get('issued')));
+			$document->expired = date('Y-m-d', strtotime(Input::get('expired')));
 			$document->doc_number = Input::get('doc_number');
-			$document->sequence = Input::get('sequence');
-			$document->type_id = Input::get('type_id');
-			$document->employee_id = Input::get('employee_id');
-			$document->file_url = Input::get('file_url');
+			$document->document_type_id = Input::get('type_id');
+			if (Input::hasFile('document_file')) {
+				$document->file_url = $destinationPath . $fileName;
+			}
+			$document->kitas_id = Input::get('kitas_id');
 			$document->save();
 
 			Session::flash('message', 'Berhasil menambahkan dokumen.');
-			return Redirect::to('document');
+			return Redirect::to('kitas/' . Input::get('kitas_id') . '/view');
 		}
 	}
 

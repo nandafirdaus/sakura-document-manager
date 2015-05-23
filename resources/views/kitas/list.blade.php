@@ -5,7 +5,7 @@
 	<div class="row">
 		<div class="col-md-10 col-md-offset-1">
 			<div class="panel panel-default">
-				<div class="panel-heading">Daftar Karyawan</div>
+				<div class="panel-heading">Daftar KITAS</div>
 				<div class="panel-body">
 					@if (count($errors) > 0)
 						<div class="alert alert-danger">
@@ -19,36 +19,40 @@
 					@endif
 
 					<div class="form-group">
-						<a class="btn btn-primary btn-sm" href="{{ url('/employee/create') }}" role="button">Tambah Karyawan</a>
+						<a class="btn btn-primary btn-sm" href="{{ url('/kitas/create') }}" role="button">Tambah KITAS</a>
 					</div>
 
 					<div class="table-responsive">
 						<table class="table table-hover">
 							<thead>
 								<tr>
-									<th>Nama</th>
-									<th>Jabatan</th>
+									<th>Nama Karyawan</th>
+									<th>Ke</th>
 									<th>Perusahaan</th>
+									<th>Issued</th>
+									<th>Expired</th>
 									<th>Perintah</th>
 								</tr>
 							</thead>
 							<tbody>
-								@foreach ($employees->all() as $employee)
+								@foreach ($kitases->all() as $kitas)
 									<tr>
-										<td>{{$employee->name}}</td>
-										<td>{{$employee->position}}</td>
-										<td>{{$employee->company->name}}</td>
+										<td>{{$kitas->employee->name}}</td>
+										<td>{{$kitas->sequence}}</td>
+										<td>{{$kitas->employee->company->name}}</td>
+										<td>{{date('d-m-Y', strtotime($kitas->issued))}}</td>
+										<td>{{date('d-m-Y', strtotime($kitas->expired))}}</td>
 										<td>
-											<a class="btn btn-success" href="{{ url('/employee/' . $employee->id . '/view') }}" role="button">Lihat</a>
-											<a class="btn btn-primary" href="{{ url('/employee/' . $employee->id . '/edit') }}" role="button">Edit</a>
-											<a class="btn btn-warning" href="{{ url('/employee/' . $employee->id . '/delete') }}" role="button" Onclick="javascript:return confirm('Yakin ingin menghapus data ini?');">Hapus</a>
+											<a class="btn btn-success" href="{{ url('/kitas/' . $kitas->id . '/view') }}" role="button">Lihat</a>
+											<a class="btn btn-primary" href="{{ url('/kitas/' . $kitas->id . '/edit') }}" role="button">Edit</a>
+											<a class="btn btn-warning" href="{{ url('/kitas/' . $kitas->id . '/delete') }}" role="button" Onclick="javascript:return confirm('Yakin ingin menghapus data ini?');">Hapus</a>
 										</td>
 									</td>
 								@endforeach
 							</tbody>
 							<tfoot>
 							    <tr role="row">
-							        <th data-column="0" colspan="4" class="ts-pager form-horizontal tablesorter-pager tablesorter-headerAsc">
+							        <th data-column="0" colspan="6" class="ts-pager form-horizontal tablesorter-pager tablesorter-headerAsc">
 										<button aria-disabled="false" tabindex="0" type="button" class="btn first"><i class="icon-step-backward glyphicon glyphicon-step-backward"></i></button>
 										<button aria-disabled="false" tabindex="0" type="button" class="btn prev"><i class="icon-arrow-left glyphicon glyphicon-backward"></i></button>
 										<span class="pagedisplay">41 - 50 / 50 (50)</span> <!-- this can be any element, including an input -->
@@ -139,7 +143,6 @@
 								output: '{startRow} - {endRow} / {filteredRows} ({totalRows})'
 
 							  });
-
 							});
 						</script>
 					</div>

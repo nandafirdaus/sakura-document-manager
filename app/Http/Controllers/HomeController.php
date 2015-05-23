@@ -1,5 +1,9 @@
 <?php namespace App\Http\Controllers;
 
+use App\Models\Employee;
+use App\Models\Kitas;
+use App\Models\Rptka;
+use Carbon\Carbon;
 use Redirect;
 
 class HomeController extends Controller {
@@ -32,7 +36,17 @@ class HomeController extends Controller {
 	 */
 	public function index()
 	{
-		return view('home');
+		$date = Carbon::today();
+		$dateKitas = $date->addMonths(2);
+		$datePassport = $date->addMonths(18);
+		$dateRptka = $date->addWeek();
+		$kitas = Kitas::where('expired', '<', $dateKitas)->count();
+		$passport = Employee::where('passport_expired', '<', $datePassport)->count();
+		$rptka = Rptka::where('expired', '<', $dateRptka)->count();
+		return view('home')
+		->with('kitas', $kitas)
+		->with('passport', $passport)
+		->with('rptka', $rptka);
 	}
 
 	public function redirect()

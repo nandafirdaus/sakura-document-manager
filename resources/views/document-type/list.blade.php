@@ -37,7 +37,7 @@
 										<td>
 											<a class="btn btn-success" href="{{ url('/document-type/' . $documentType->id . '/view') }}" role="button">Lihat</a>
 											<a class="btn btn-primary" href="{{ url('/document-type/' . $documentType->id . '/edit') }}" role="button">Edit</a>
-											<a class="btn btn-warning" href="{{ url('/document-type/' . $documentType->id . '/delete') }}" role="button" Onclick="javascript:return confirm('Yakin ingin menghapus data ini?');">Hapus</a>
+											<!--<a class="btn btn-warning" href="{{ url('/document-type/' . $documentType->id . '/delete') }}" role="button" Onclick="javascript:return confirm('Yakin ingin menghapus data ini?');">Hapus</a>-->
 										</td>
 									</td>
 								@endforeach

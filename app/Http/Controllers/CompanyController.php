@@ -5,6 +5,7 @@ use Validator;
 use Input;
 use Session;
 use Redirect;
+use Response;
 
 class CompanyController extends Controller {
 	/**
@@ -91,6 +92,21 @@ class CompanyController extends Controller {
 
 		Session::flash('message', 'Berhasil menghapus data.');
 		return Redirect::to('company');
+	}
+
+	public function getRptka()
+	{
+		$id = Input::get('id');
+
+		if ($id == null) {
+			return Response::json();
+		}
+
+		$company = Company::find($id);
+		$rptkas = $company->rptka();
+		$rptkaOptions = array('default' => 'Pilih RPTKA');
+
+		return Response::json($rptkas->get(['id', 'doc_number']));
 	}
 }
 ?>
