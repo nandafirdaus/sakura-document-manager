@@ -70,14 +70,14 @@
 						<div class="form-group">
 							<label class="col-md-4 control-label">Passport Issued</label>
 							<div class="col-md-6">
-								<input type="text" id="issued" class="form-control" name="passport_issued" value="{{ $employee->passport_issued }}">
+								<input type="text" id="issued" class="form-control" name="passport_issued" value="{{ date('d-m-Y', strtotime($employee->passport_issued)) }}">
 							</div>
 						</div>
 
 						<div class="form-group">
 							<label class="col-md-4 control-label">Passport Expired</label>
 							<div class="col-md-6">
-								<input type="text" id="expired" class="form-control" name="passport_expired" value="{{ $employee->passport_expired }}">
+								<input type="text" id="expired" class="form-control" name="passport_expired" value="{{ date('d-m-Y', strtotime($employee->passport_expired)) }}">
 							</div>
 						</div>
 

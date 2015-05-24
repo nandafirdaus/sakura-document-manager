@@ -36,10 +36,9 @@ class HomeController extends Controller {
 	 */
 	public function index()
 	{
-		$date = Carbon::today();
-		$dateKitas = $date->addMonths(2);
-		$datePassport = $date->addMonths(18);
-		$dateRptka = $date->addWeek();
+		$dateKitas = Carbon::today()->addMonths(2);
+		$datePassport = Carbon::today()->addMonths(18);
+		$dateRptka = Carbon::today()->addWeek();
 		$kitas = Kitas::where('expired', '<', $dateKitas)->count();
 		$passport = Employee::where('passport_expired', '<', $datePassport)->count();
 		$rptka = Rptka::where('expired', '<', $dateRptka)->count();
