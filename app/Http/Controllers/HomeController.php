@@ -3,6 +3,8 @@
 use App\Models\Employee;
 use App\Models\Kitas;
 use App\Models\Rptka;
+use App\Models\DocumentType;
+use App\Models\Document;
 use Carbon\Carbon;
 use Redirect;
 
@@ -36,16 +38,20 @@ class HomeController extends Controller {
 	 */
 	public function index()
 	{
-		$dateKitas = Carbon::today()->addMonths(2);
-		$datePassport = Carbon::today()->addMonths(18);
-		$dateRptka = Carbon::today()->addWeek();
+		$dateKitas = Carbon::today()->addMonths(1);
+		$datePassport = Carbon::today()->addMonths(12);
+		$dateRptka = Carbon::today()->addMonths(3);
+		$dateImta = Carbon::today()->addMonths(2);
 		$kitas = Kitas::where('expired', '<', $dateKitas)->count();
 		$passport = Employee::where('passport_expired', '<', $datePassport)->count();
 		$rptka = Rptka::where('expired', '<', $dateRptka)->count();
+		$imtaId = DocumentType::where('name', '=', 'IMTA')->first()->id;
+		$imta = Document::where('document_type_id', '=', $imtaId)->where('expired', '<', $dateImta)->count();
 		return view('home')
 		->with('kitas', $kitas)
 		->with('passport', $passport)
-		->with('rptka', $rptka);
+		->with('rptka', $rptka)
+		->with('imta', $imta);
 	}
 
 	public function redirect()

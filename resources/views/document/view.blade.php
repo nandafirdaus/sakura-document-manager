@@ -59,7 +59,11 @@
 
 						<div class="form-group">
 							<div class="col-md-6 col-md-offset-4">
+								@if($prev == '')
 								<a class="btn btn-primary" href="{{ url('kitas/' . $document->kitas_id . '/view') }}" role="button">Kembali</a>
+								@else
+									<a class="btn btn-primary" href="{{ url('expired/imta') }}" role="button">Kembali</a>
+								@endif
 							</div>
 						</div>
 					</form>

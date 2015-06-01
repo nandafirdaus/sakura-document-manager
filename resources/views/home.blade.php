@@ -15,7 +15,7 @@
 	</div>
 		
 	<div class="row">
-		<div class="col-md-4">
+		<div class="col-md-3">
 			<div class="panel panel-default">
 				<div class="panel-heading">KITAS Expired</div>
 
@@ -35,7 +35,7 @@
 			</div>
 		</div>
 
-		<div class="col-md-4">
+		<div class="col-md-3">
 			<div class="panel panel-default">
 				<div class="panel-heading">Passport Expired</div>
 
@@ -55,7 +55,7 @@
 			</div>
 		</div>
 		
-		<div class="col-md-4">
+		<div class="col-md-3">
 			<div class="panel panel-default">
 				<div class="panel-heading">RPTKA Expired</div>
 
@@ -69,6 +69,26 @@
 					<div class="row">
 						<div class="col-md-12 text-center">
 							<p style='font-weight: bold'>RPTKA akan segera expired</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-md-3">
+			<div class="panel panel-default">
+				<div class="panel-heading">IMTA Expired</div>
+
+				<div class="panel-body">
+					<div class="row">
+						<div class="col-md-12 text-center">
+							<a href="{{ url('expired/imta') }}" style="font-size:75px">{{ $imta }}</a>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-md-12 text-center">
+							<p style='font-weight: bold'>IMTA akan segera expired</p>
 						</div>
 					</div>
 				</div>

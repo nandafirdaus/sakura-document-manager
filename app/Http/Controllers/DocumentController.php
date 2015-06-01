@@ -82,11 +82,13 @@ class DocumentController extends Controller {
 		$document = Document::find($id);
 		$employees = Employee::all();
 		$documentTypes = DocumentType::all();
+		$prev = Input::get('prev') == '' ? '' : '?prev=' . Input::get('prev');
 
 		return view('document.edit')
 		->with('document', $document)
 		->with('employees', $employees)
-		->with('documentTypes', $documentTypes);
+		->with('documentTypes', $documentTypes)
+		->with('prev', $prev);
 	}
 
 	public function postEdit($id)
@@ -131,16 +133,22 @@ class DocumentController extends Controller {
 			$document->save();
 
 			Session::flash('message', 'Berhasil menambahkan dokumen.');
-			return Redirect::to('kitas/' . Input::get('kitas_id') . '/view');
+			if (Input::get('prev') != '') {
+				return Redirect::to('expired/imta');				
+			} else {
+				return Redirect::to('kitas/' . Input::get('kitas_id') . '/view');
+			}
 		}
 	}
 
 	public function getView($id)
 	{
 		$document = Document::find($id);
+		$prev = Input::get('prev') == '' ? '' : '?prev=' . Input::get('prev');
 
 		return view('document.view')
-		->with('document', $document);
+		->with('document', $document)
+		->with('prev', $prev);
 	}
 
 	public function getList()

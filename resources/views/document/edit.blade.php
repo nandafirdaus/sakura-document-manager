@@ -18,7 +18,7 @@
 						</div>
 					@endif
 
-					<form class="form-horizontal" role="form" method="POST" action="{{ url('/document/' . $document->id .  '/edit') }}" enctype="multipart/form-data">
+					<form class="form-horizontal" role="form" method="POST" action="{{ url('/document/' . $document->id .  '/edit') . $prev  }}" enctype="multipart/form-data">
 						<input type="hidden" name="_token" value="{{ csrf_token() }}">
 						<input type="hidden" name="kitas_id" value="{{ $document->kitas_id }}">
 
@@ -68,7 +68,11 @@
 								<button type="submit" class="btn btn-primary">
 									Simpan
 								</button>
-								<a class="btn btn-primary" href="{{ url('kitas/' . $document->kitas_id . '/view') }}" role="button">Kembali</a>
+								@if($prev == '')
+									<a class="btn btn-primary" href="{{ url('kitas/' . $document->kitas_id . '/view') }}" role="button">Kembali</a>
+								@else
+									<a class="btn btn-primary" href="{{ url('expired/imta') }}" role="button">Kembali</a>
+								@endif
 							</div>
 						</div>
 					</form>

@@ -3,6 +3,8 @@
 use App\Models\Employee;
 use App\Models\Kitas;
 use App\Models\Rptka;
+use App\Models\Document;
+use App\Models\DocumentType;
 use Carbon\Carbon;
 use Validator;
 use Session;
@@ -22,7 +24,7 @@ class ExpiredController extends Controller {
 	public function getKitas()
 	{
 		$date = Carbon::today();
-		$dateKitas = $date->addMonths(2);
+		$dateKitas = $date->addMonths(1);
 		$kitases = Kitas::where('expired', '<', $dateKitas)->get();
 		return view('expired/listKitas')
 			->with('kitases', $kitases);
@@ -31,7 +33,7 @@ class ExpiredController extends Controller {
 	public function getPassport()
 	{
 		$date = Carbon::today();
-		$datePassport = $date->addMonths(18);
+		$datePassport = $date->addMonths(12);
 		$employees = Employee::where('passport_expired', '<', $datePassport)->get();
 		return view('expired/listPassport')
 			->with('employees', $employees);
@@ -40,10 +42,20 @@ class ExpiredController extends Controller {
 	public function getRptka()
 	{
 		$date = Carbon::today();
-		$dateRptka = $date->addWeek();
+		$dateRptka = $date->addMonths(3);
 		$rptkas = Rptka::where('expired', '<', $dateRptka)->get();
 		return view('expired/listRptka')
 			->with('rptkas', $rptkas);
+	}
+
+	public function getImta()
+	{
+		$date = Carbon::today();
+		$dateImta = $date->addMonths(2);
+		$imtaId = DocumentType::where('name', '=', 'IMTA')->first()->id;
+		$imtas = Document::where('document_type_id', '=', $imtaId)->where('expired', '<', $dateImta)->get();
+		return view('expired/listImta')
+			->with('imtas', $imtas);
 	}
 }
 ?>

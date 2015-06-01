@@ -153,6 +153,12 @@ Route::get('expired/passport', 'ExpiredController@getPassport');
 
 Route::get('expired/rptka', 'ExpiredController@getRptka');
 
+Route::get('expired/imta', 'ExpiredController@getImta');
+
+/**
+	User Routes
+*/
+
 Route::controllers([
 	'auth' => 'AccountController',
 	'password' => 'Auth\PasswordController',
