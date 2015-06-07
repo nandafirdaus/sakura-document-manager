@@ -4,6 +4,7 @@ use App\Models\Document;
 use App\Models\DocumentType;
 use App\Models\Company;
 use App\Models\Employee;
+use App\Models\Kitas;
 
 use Carbon\Carbon;
 use Validator;
@@ -295,5 +296,60 @@ class ReportController extends Controller {
 		return response()->download(public_path() . '/' . $fileName, $employeeName . '-Documents.zip', $headers)->deleteFileAfterSend(true);
 	}
 
+	public function getExpiredDocumentsPerMonth() {
+		return view('report/expired-documents');
+	}
+	
+	public function getDownloadExpiredDocumentsPerMonth() {
+		
+		Excel::create('report', function($excel) {
+			$excel->sheet('Laporan', function($sheet) {
+				$MonthStart = Input::get('month-start');
+				$yearStart = Input::get('year-start');
+				$monthEnd = Input::get('month-end');
+				$yearEnd = Input::get('year-end');
+				
+				if ($yearEnd < $yearStart || ($yearEnd == $yearStart && $monthEnd < $monthStart)) {
+					return view('report/expired-documents')
+						->withErrors('Tanggal akhir harus lebih besar dari tanggal awal!');
+				}
+				
+				$period = (($yearEnd - $yearStart) * 12) + ($monthEnd - $monthStart);
+				
+				for ($i = $monthStart; $i < $monthEnd; $i++) {
+					$startDate = Carbon::createFromFormat('Y-m-d', $yearStart . '-' . $monthStart . '-1');
+					$endDate = Carbon::createFromFormat('Y-m-d', $yearEnd . '-' . $monthEnd . '-1');
+					
+					$kitases = Kitas::where('expired', '<', $startDate)
+						->where('expired', '>', $endDate)
+						->get();
+						
+					$sheet->appendRow(array(
+						'No',
+						'Nama',
+						'Perusahaan',
+						'KITAS',
+						'Ke-',
+						'MERP',
+						'RPTKA',
+						'Eks Passport'
+					));
+					
+					foreach($kitases as $kitas) {
+						$sheet->appendRow(array(
+							'No',
+							$kitas->employee->name,
+							$kitas->employee->company->name,
+							$kitas->expired,
+							$kitas->sequence,
+							'MERP',
+							'RPTKA',
+							$kitas->employee->passport_expired
+						));
+					}
+				}
+			});
+		})->download('xls');
+	} 
 }
 ?>
