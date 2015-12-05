@@ -51,6 +51,13 @@
 						</div>
 
 						<div class="form-group">
+							<label class="col-md-4 control-label">Versi Dokumen:</label>
+							<div class="col-md-6">
+								<p class="form-control-static">{{ $document->version }}</p>
+							</div>
+						</div>
+
+						<div class="form-group">
 							<label class="col-md-4 control-label">Download dokumen:</label>
 							<div class="col-md-6">
 								<a class="btn btn-default btn-sm" href="{{ url($document->file_url) }}" target="_blank" role="button">Download</a>

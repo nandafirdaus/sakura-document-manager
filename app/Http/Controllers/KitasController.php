@@ -39,6 +39,14 @@ class KitasController extends Controller {
 				->withInput(Input::all());
 		} else {
 
+			$version = 1;
+
+			$kitas = Employee::find(Input::get('employee_id'))->kitas()->get()->first();
+			if ($kitas != null) {
+				$version = $kitas->version + 1;
+				$this->delete($kitas->id);
+			}
+
 			$destinationPath = '';
 			$fileName = '';
 
@@ -120,22 +128,26 @@ class KitasController extends Controller {
 
 	public function getView($id)
 	{
-		$kitas = Kitas::find($id);
+		$kitas = Kitas::withTrashed()->find($id);
 		$documents = $kitas->documents;
+		$deletedDocuments = $kitas->documents()->onlyTrashed()->get();
 		$prev = Input::get('prev') == '' ? '' : '?prev=' . Input::get('prev');
 
 		return view('kitas.view')
 		->with('kitas', $kitas)
 		->with('documents', $documents)
+		->with('deletedDocuments', $deletedDocuments)
 		->with('prev', $prev);
 	}
 
 	public function getList()
 	{
 		$kitases = Kitas::all();
+		$deletedKitases = Kitas::onlyTrashed()->get();
 
 		return view('kitas.list')
-		->with('kitases', $kitases);
+		->with('kitases', $kitases)
+		->with('deletedKitases', $deletedKitases);
 	}
 
 	public function delete($id)

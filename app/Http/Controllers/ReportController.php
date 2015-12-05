@@ -5,6 +5,7 @@ use App\Models\DocumentType;
 use App\Models\Company;
 use App\Models\Employee;
 use App\Models\Kitas;
+use App\Models\Rptka;
 
 use Carbon\Carbon;
 use Validator;
@@ -300,30 +301,78 @@ class ReportController extends Controller {
 		return view('report/expired-documents');
 	}
 	
-	public function getDownloadExpiredDocumentsPerMonth() {
+	public function getDownloadExpiredDocumentsPerMonth($monthStart, $yearStart, $monthEnd, $yearEnd) {
 		
-		Excel::create('report', function($excel) {
-			$excel->sheet('Laporan', function($sheet) {
-				$MonthStart = Input::get('month-start');
-				$yearStart = Input::get('year-start');
-				$monthEnd = Input::get('month-end');
-				$yearEnd = Input::get('year-end');
-				
+		Excel::create('report', function($excel) use($monthStart, $yearStart, $monthEnd, $yearEnd) {
+			$excel->sheet('Laporan', function($sheet) use($monthStart, $yearStart, $monthEnd, $yearEnd) {
 				if ($yearEnd < $yearStart || ($yearEnd == $yearStart && $monthEnd < $monthStart)) {
 					return view('report/expired-documents')
 						->withErrors('Tanggal akhir harus lebih besar dari tanggal awal!');
 				}
+
+				$row = 1;
+
+				$sheet->appendRow(array("Laporan Expired Bulanan"));
 				
+				// Merge position column
+				$sheet->mergeCells('A' . $row . ':H' . ($row));
+				// Set position column's alignment to center and bold
+				$sheet->cell('A' . $row, function($cell) {
+					$cell->setAlignment('center');
+					$cell->setValignment('center');
+					$cell->setFontWeight('bold');
+				});
+
+				$sheet->appendRow(array());
+				$row += 1;
+
 				$period = (($yearEnd - $yearStart) * 12) + ($monthEnd - $monthStart);
-				
-				for ($i = $monthStart; $i < $monthEnd; $i++) {
+
+				for ($i = 0; $i <= $period; $i++) {
+					if ($monthStart > 12) {
+						$monthStart = $monthStart % 12;
+						$yearStart++;
+					}
+
+					$monthEnd = $monthStart+1;
+					$yearEnd = $yearStart;
+
+					if ($monthEnd > 12) {
+						$monthEnd = $monthEnd % 12;
+						$yearEnd++;
+					}
+
 					$startDate = Carbon::createFromFormat('Y-m-d', $yearStart . '-' . $monthStart . '-1');
 					$endDate = Carbon::createFromFormat('Y-m-d', $yearEnd . '-' . $monthEnd . '-1');
 					
-					$kitases = Kitas::where('expired', '<', $startDate)
-						->where('expired', '>', $endDate)
+					$kitases = Kitas::where('expired', '>', $startDate)
+						->where('expired', '<', $endDate)
 						->get();
-						
+
+					if ($kitases->count() == 0) {
+						$monthStart++;
+						continue;
+					}
+
+					$sheet->appendRow(array(""));
+					$row++;
+
+					$sheet->appendRow(array(
+						date('M Y', strtotime($startDate))
+					));
+
+					// Merge position column
+					$sheet->mergeCells('A' . $row . ':H' . ($row));
+
+					// Set position column's alignment to center and bold
+					$sheet->cell('A' . $row, function($cell) {
+						$cell->setAlignment('center');
+						$cell->setValignment('center');
+						$cell->setFontWeight('bold');
+					});
+
+					$row++;
+
 					$sheet->appendRow(array(
 						'No',
 						'Nama',
@@ -334,18 +383,47 @@ class ReportController extends Controller {
 						'RPTKA',
 						'Eks Passport'
 					));
+					$row++;
+
+					$no = 1;
 					
 					foreach($kitases as $kitas) {
+						$merpId = DocumentType::where('name', '=', 'MERP')->first()->id;
+						$merp = Document::where('document_type_id', '=', $merpId)->where('kitas_id', '=', $kitas->id)->first();
+						$merpExpired = "";
+						$rptkaExpired = "";
+
+						$dateRptka = Carbon::createFromFormat('Y-m-d', $yearStart . '-' . ($monthStart + 3) . '-1');
+						$rptka = Rptka::where('id', '=', $kitas->employee->rptka_id)->where('expired', '<', $dateRptka)->first();
+
+
+						$kitasExpired = $kitas->expired != null ? date('d M Y', strtotime($kitas->expired)) : "";
+						$passportExpired = $kitas->employee->passport_expired != null ? date('d M Y', strtotime($kitas->employee->passport_expired)) : "";
+						
+						if ($rptka != null) {
+							// $rptkaExpired = $rptka->expired != null ? date('d M Y', strtotime($rptka->expired)) : "";
+							$rptkaExpired = $rptka->expired != null ? "Perpanjangan" : "";
+						}
+						
+						if ($merp != null) {
+							$merpExpired = date('d M Y', strtotime($merp->expired));
+						}
+
 						$sheet->appendRow(array(
-							'No',
+							$no,
 							$kitas->employee->name,
 							$kitas->employee->company->name,
-							$kitas->expired,
+							$kitasExpired,
 							$kitas->sequence,
-							'MERP',
-							'RPTKA',
-							$kitas->employee->passport_expired
+							$merpExpired,
+							$rptkaExpired,
+							$passportExpired
 						));
+
+						$no++;
+						$row++;
+						$monthStart++;
+
 					}
 				}
 			});

@@ -7,7 +7,7 @@ class Document extends \Eloquent {
 	use SoftDeletes;
 
 	protected $guarded = array('id', 'deleted_at');
-	protected $fillable = array('issued', 'expired', 'doc_number', 'document_type_id', 'file_url', 'kitas_id');
+	protected $fillable = array('issued', 'expired', 'doc_number', 'document_type_id', 'file_url', 'kitas_id', 'version');
 
 	public static $rules = array(
 		'issued' => 'date',

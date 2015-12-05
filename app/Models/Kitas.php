@@ -8,7 +8,7 @@ class Kitas extends \Eloquent {
 
 	protected $table = 'kitas';
 	protected $guarded = array('id', 'deleted_at');
-	protected $fillable = array('issued', 'expired', 'doc_number', 'sequence', 'file_url', 'employee_id');
+	protected $fillable = array('issued', 'expired', 'doc_number', 'sequence', 'file_url', 'employee_id', 'version');
 
 	public static $rules = array(
 		'issued' => 'date',

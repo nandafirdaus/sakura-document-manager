@@ -69,6 +69,83 @@
 							    </tr>
 							</tfoot>
 						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-md-10 col-md-offset-1">
+			<div class="panel panel-default">
+				<div class="panel-heading">Daftar KITAS Lama</div>
+				<div class="panel-body">
+					@if (count($errors) > 0)
+						<div class="alert alert-danger">
+							<strong>Whoops!</strong> Ada yang salah dengan input yang anda masukkan.<br><br>
+							<ul>
+								@foreach ($errors->all() as $error)
+									<li>{{ $error }}</li>
+								@endforeach
+							</ul>
+						</div>
+					@endif
+
+					<div class="form-group">
+						<a class="btn btn-primary btn-sm" href="{{ url('/kitas/create') }}" role="button">Tambah KITAS</a>
+					</div>
+
+					<div class="table-responsive">
+						<table class="table table-hover">
+							<thead>
+								<tr>
+									<th>Nama Karyawan</th>
+									<th>Ke</th>
+									<th>Perusahaan</th>
+									<th>Issued</th>
+									<th>Expired</th>
+									<th>Version</th>
+									<th>Perintah</th>
+								</tr>
+							</thead>
+							<tbody>
+								@foreach ($deletedKitases->all() as $kitas)
+									<tr>
+										<td>{{$kitas->employee->name}}</td>
+										<td>{{$kitas->sequence}}</td>
+										<td>{{$kitas->employee->company->name}}</td>
+										<td>{{date('d-m-Y', strtotime($kitas->issued))}}</td>
+										<td>{{date('d-m-Y', strtotime($kitas->expired))}}</td>
+										<td>{{$kitas->version}}</td>
+										<td>
+											<a class="btn btn-success" href="{{ url('/kitas/' . $kitas->id . '/view') }}" role="button">Lihat</a>
+											<!-- <a class="btn btn-primary" href="{{ url('/kitas/' . $kitas->id . '/edit') }}" role="button">Edit</a> -->
+											<!-- <a class="btn btn-warning" href="{{ url('/kitas/' . $kitas->id . '/delete') }}" role="button" Onclick="javascript:return confirm('Yakin ingin menghapus data ini?');">Hapus</a> -->
+										</td>
+									</td>
+								@endforeach
+							</tbody>
+							<tfoot>
+							    <tr role="row">
+							        <th data-column="0" colspan="7" class="ts-pager form-horizontal tablesorter-pager tablesorter-headerAsc">
+										<button aria-disabled="false" tabindex="0" type="button" class="btn first"><i class="icon-step-backward glyphicon glyphicon-step-backward"></i></button>
+										<button aria-disabled="false" tabindex="0" type="button" class="btn prev"><i class="icon-arrow-left glyphicon glyphicon-backward"></i></button>
+										<span class="pagedisplay">41 - 50 / 50 (50)</span> <!-- this can be any element, including an input -->
+										<button aria-disabled="true" tabindex="0" type="button" class="btn next disabled"><i class="icon-arrow-right glyphicon glyphicon-forward"></i></button>
+										<button aria-disabled="true" tabindex="0" type="button" class="btn last disabled"><i class="icon-step-forward glyphicon glyphicon-step-forward"></i></button>
+										<select aria-disabled="false" class="pagesize input-mini" title="Select page size">
+											<option value="10">10</option>
+											<option value="20">20</option>
+											<option value="30">30</option>
+											<option value="40">40</option>
+										</select>
+										<select aria-disabled="false" class="pagenum input-mini" title="Select page number"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option></select>
+									</th>
+							    </tr>
+							</tfoot>
+						</table>
 						<script type="text/javascript">
 							$(function() {
 
@@ -151,4 +228,5 @@
 		</div>
 	</div>
 </div>
+
 @endsection

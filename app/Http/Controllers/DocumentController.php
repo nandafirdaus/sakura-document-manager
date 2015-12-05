@@ -44,12 +44,16 @@ class DocumentController extends Controller {
 				->withInput(Input::all());
 		} else {
 
+			$version = 1;
+
 			$kitas = Kitas::find(Input::get('kitas_id'));
 			$doc = $kitas->documents()->where('document_type_id', '=', Input::get('type_id'))->first();
 			if ($doc != null) {
-				return Redirect::to('document/create/' . Input::get('kitas_id'))
-				->withErrors("Dokumen " . $doc->documentType->name . " sudah ada! Edit atau hapus dokumen lama.")
-				->withInput(Input::all());
+				$version = $doc->version + 1;
+				$this->delete($doc->id);
+				// return Redirect::to('document/create/' . Input::get('kitas_id'))
+				// ->withErrors("Dokumen " . $doc->documentType->name . " sudah ada! Edit atau hapus dokumen lama.")
+				// ->withInput(Input::all());
 			}
 
 			$destinationPath = '';
@@ -70,6 +74,7 @@ class DocumentController extends Controller {
 			$document->document_type_id = Input::get('type_id');
 			$document->file_url = $destinationPath . $fileName;
 			$document->kitas_id = Input::get('kitas_id');
+			$document->version = $version;
 			$document->save();
 
 			Session::flash('message', 'Berhasil menambahkan dokumen!');
@@ -143,7 +148,7 @@ class DocumentController extends Controller {
 
 	public function getView($id)
 	{
-		$document = Document::find($id);
+		$document = Document::withTrashed()->find($id);
 		$prev = Input::get('prev') == '' ? '' : '?prev=' . Input::get('prev');
 
 		return view('document.view')

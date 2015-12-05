@@ -83,6 +83,7 @@
 						<ul class="dropdown-menu" role="menu">
 							<li><a href="{{ url('/report/document') }}">Dokumen per Perusahaan</a></li>
 							<li><a href="{{ url('/report/employee-document') }}">Dokumen Karyawan</a></li>
+							<li><a href="{{ url('/report/download-expired') }}">Expired Bulanan</a></li>
 						</ul>
 					</li>
 				</ul>

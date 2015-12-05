@@ -145,7 +145,7 @@ Route::get('report/download-document/{id}', 'ReportController@getDownloadEmploye
 
 Route::get('report/download-expired', 'ReportController@getExpiredDocumentsPerMonth');
 
-Route::get('report/generate-expired', 'ReportController@getDownloadExpiredDocumentsPerMonth');
+Route::get('report/generate-expired/{monthStart}/{yearStart}/{monthEnd}/{yearEnd}', 'ReportController@getDownloadExpiredDocumentsPerMonth');
 
 /**
 	Expired Routes
